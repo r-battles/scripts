@@ -1,0 +1,466 @@
+version: "3.6"
+services:
+  duckdns:
+    cap_drop:
+      - "AUDIT_CONTROL"
+      - "BLOCK_SUSPEND"
+      - "DAC_READ_SEARCH"
+      - "IPC_LOCK"
+      - "IPC_OWNER"
+      - "LEASE"
+      - "LINUX_IMMUTABLE"
+      - "MAC_ADMIN"
+      - "MAC_OVERRIDE"
+      - "NET_ADMIN"
+      - "NET_BROADCAST"
+      - "SYSLOG"
+      - "SYS_ADMIN"
+      - "SYS_BOOT"
+      - "SYS_MODULE"
+      - "SYS_NICE"
+      - "SYS_PACCT"
+      - "SYS_PTRACE"
+      - "SYS_RAWIO"
+      - "SYS_RESOURCE"
+      - "SYS_TIME"
+      - "SYS_TTY_CONFIG"
+      - "WAKE_ALARM"
+    container_name: "duckdns"
+    entrypoint:
+      - "/init"
+    environment:
+      - "TZ=Europe/London"
+      - "SUBDOMAINS=russo"
+      - "TOKEN=29a6f0ff-4b1c-436e-bb52-21503f03172c"
+      - "LOG_FILE=true"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "PS1=$(whoami)@$(hostname):$(pwd)\\$"
+      - "HOME=/root"
+      - "TERM=xterm"
+      - "S6_BEHAVIOUR_IF_STAGE2_FAILS=2"
+      - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+    hostname: "c7a5c9454782"
+    image: "lscr.io/linuxserver/duckdns:latest"
+    ipc: "private"
+    labels:
+      build_version: "Linuxserver.io version:- d087f467-ls92 Build-date:- 2022-03-09T16:56:11+01:00"
+      com.docker.compose.config-hash: "5d77fca0fa2d95cc1f1bac7565e11a1d0905c9256a3208e594b3d304e7d955cb"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:b11581d84b16a030d73254f1f44e608b8eb2588b60fe9eb6e4f4bf5afaf1221e"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "duckdns"
+      com.docker.compose.project.config_files: "/data/compose/2/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/2"
+      com.docker.compose.service: "duckdns"
+      com.docker.compose.version: "2.5.1"
+      maintainer: "aptalca"
+      org.opencontainers.image.authors: "linuxserver.io"
+      org.opencontainers.image.created: "2022-03-09T16:56:11+01:00"
+      org.opencontainers.image.description: "[Duckdns](https://duckdns.org/) is a\
+        \ free service which will point a DNS (sub domains of duckdns.org) to an IP\
+        \ of your choice. The service is completely free, and doesn't require reactivation\
+        \ or forum posts to maintain its existence."
+      org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-duckdns"
+      org.opencontainers.image.licenses: "GPL-3.0-only"
+      org.opencontainers.image.ref.name: "ffb82cdaa3929af789043e10d920ed827438c2f6"
+      org.opencontainers.image.revision: "ffb82cdaa3929af789043e10d920ed827438c2f6"
+      org.opencontainers.image.source: "https://github.com/linuxserver/docker-duckdns"
+      org.opencontainers.image.title: "Duckdns"
+      org.opencontainers.image.url: "https://github.com/linuxserver/docker-duckdns/packages"
+      org.opencontainers.image.vendor: "linuxserver.io"
+      org.opencontainers.image.version: "d087f467-ls92"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "duckdns_default"
+    restart: "unless-stopped"
+  grafana:
+    container_name: "grafana"
+    entrypoint:
+      - "/run.sh"
+    environment:
+      - "PATH=/usr/share/grafana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "GF_PATHS_CONFIG=/etc/grafana/grafana.ini"
+      - "GF_PATHS_DATA=/var/lib/grafana"
+      - "GF_PATHS_HOME=/usr/share/grafana"
+      - "GF_PATHS_LOGS=/var/log/grafana"
+      - "GF_PATHS_PLUGINS=/var/lib/grafana/plugins"
+      - "GF_PATHS_PROVISIONING=/etc/grafana/provisioning"
+    hostname: "4e5e3498a489"
+    image: "grafana/grafana"
+    ipc: "private"
+    labels:
+      com.docker.compose.config-hash: "c74600cc323b889e36cdbd1ace64ae8b3faf382ef275126e9480dda42b5078d2"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:13750e77fcd1e092b8e4d541089f705bc838f7eb997b0d811048070af12050f7"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "graphana-influxdb"
+      com.docker.compose.project.config_files: "/data/compose/19/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/19"
+      com.docker.compose.service: "grafana"
+      com.docker.compose.version: "2.5.1"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "graphana-influxdb_default"
+    ports:
+      - "3000:3000/tcp"
+    restart: "always"
+    user: "101"
+    volumes:
+      - "/media/media-drive1/grafana/data:/var/lib/grafana"
+    working_dir: "/usr/share/grafana"
+  influxdb:
+    command:
+      - "influxd"
+    container_name: "influxdb"
+    entrypoint:
+      - "/entrypoint.sh"
+    environment:
+      - "INFLUXDB_USER=influx"
+      - "INFLUX_PASSWORD=influx"
+      - "INFLUXDB_ADMIN_ENABLED=true"
+      - "INFLUXDB_ADMIN_USER=admin"
+      - "INFLUXDB_ADMIN_PASSWORD=bombocas69"
+      - "INFLUXDB_DB=influxdatabase"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "GOSU_VER=1.12"
+      - "INFLUXDB_VERSION=2.5.1"
+      - "INFLUX_CLI_VERSION=2.5.0"
+      - "INFLUX_CONFIGS_PATH=/etc/influxdb2/influx-configs"
+      - "INFLUXD_INIT_PORT=9999"
+      - "INFLUXD_INIT_PING_ATTEMPTS=600"
+      - "DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME=default"
+    hostname: "01306daf6f22"
+    image: "influxdb"
+    ipc: "private"
+    labels:
+      com.docker.compose.config-hash: "23f8a5814e88934571625a701f66362b19150e12e2cf153b15c6fb87c5f52d68"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:1822a7b80b804e5cf11b5cee825decb7714cd0592b626514f862f4b7719bd1f7"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "graphana-influxdb"
+      com.docker.compose.project.config_files: "/data/compose/19/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/19"
+      com.docker.compose.service: "influxdb"
+      com.docker.compose.version: "2.5.1"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "graphana-influxdb_default"
+    ports:
+      - "8086:8086/tcp"
+    restart: "always"
+    volumes:
+      - "a85ad03e69b84408b107e4e0e4069e01c1176c9a36147a0ceb72dc0c4c3a603b:/var/lib/influxdb2"
+      - "4cd54adcf6a90bf65932cd9e7d4d93fbfe1f1b911eb7316f71c6225a480aca50:/etc/influxdb2"
+      - "/media/media-drive1/influxdb:/root/influxdb/data"
+  jellyfin:
+    cap_drop:
+      - "AUDIT_CONTROL"
+      - "BLOCK_SUSPEND"
+      - "DAC_READ_SEARCH"
+      - "IPC_LOCK"
+      - "IPC_OWNER"
+      - "LEASE"
+      - "LINUX_IMMUTABLE"
+      - "MAC_ADMIN"
+      - "MAC_OVERRIDE"
+      - "NET_ADMIN"
+      - "NET_BROADCAST"
+      - "SYSLOG"
+      - "SYS_ADMIN"
+      - "SYS_BOOT"
+      - "SYS_MODULE"
+      - "SYS_NICE"
+      - "SYS_PACCT"
+      - "SYS_PTRACE"
+      - "SYS_RAWIO"
+      - "SYS_RESOURCE"
+      - "SYS_TIME"
+      - "SYS_TTY_CONFIG"
+      - "WAKE_ALARM"
+    container_name: "jellyfin"
+    entrypoint:
+      - "/init"
+    environment:
+      - "PGID=101"
+      - "TZ=Europe/London"
+      - "device=/dev/dri:/dev/dri"
+      - "PUID=1001"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "HOME=/root"
+      - "LANGUAGE=en_US.UTF-8"
+      - "LANG=en_US.UTF-8"
+      - "TERM=xterm"
+      - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+      - "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility"
+    hostname: "17b69bd04702"
+    image: "lscr.io/linuxserver/jellyfin:latest"
+    ipc: "private"
+    labels:
+      build_version: "Linuxserver.io version:- 10.8.4-1-ls177 Build-date:- 2022-08-17T23:06:23-05:00"
+      com.docker.compose.config-hash: "f529a557dd17e37b3875bddfdad0f61c916755f3fe44ff7f0ac254a6b1597a55"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:aa09b1b724a42e5edf1f45e2fdf8fe1d017fb1b6f36600af207b662426032e3f"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "jellyfin"
+      com.docker.compose.project.config_files: "/data/compose/5/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/5"
+      com.docker.compose.service: "jellyfin"
+      com.docker.compose.version: "2.5.1"
+      maintainer: "thelamer"
+      org.opencontainers.image.authors: "linuxserver.io"
+      org.opencontainers.image.created: "2022-08-17T23:06:23-05:00"
+      org.opencontainers.image.description: "[Jellyfin](https://jellyfin.github.io/)\
+        \ is a Free Software Media System that puts you in control of managing and\
+        \ streaming your media. It is an alternative to the proprietary Emby and Plex,\
+        \ to provide media from a dedicated server to end-user devices via multiple\
+        \ apps. Jellyfin is descended from Emby's 3.5.2 release and ported to the\
+        \ .NET Core framework to enable full cross-platform support. There are no\
+        \ strings attached, no premium licenses or features, and no hidden agendas:\
+        \ just a team who want to build something better and work together to achieve\
+        \ it."
+      org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-jellyfin"
+      org.opencontainers.image.licenses: "GPL-3.0-only"
+      org.opencontainers.image.ref.name: "bc6ccdba307b349c36d25be98aba5fda10aadc89"
+      org.opencontainers.image.revision: "bc6ccdba307b349c36d25be98aba5fda10aadc89"
+      org.opencontainers.image.source: "https://github.com/linuxserver/docker-jellyfin"
+      org.opencontainers.image.title: "Jellyfin"
+      org.opencontainers.image.url: "https://github.com/linuxserver/docker-jellyfin/packages"
+      org.opencontainers.image.vendor: "linuxserver.io"
+      org.opencontainers.image.version: "10.8.4-1-ls177"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "jellyfin_default"
+    ports:
+      - "1900:1900/udp"
+      - "7359:7359/udp"
+      - "8096:8096/tcp"
+      - "8920:8920/tcp"
+    restart: "unless-stopped"
+    volumes:
+      - "/media/media-drive1/Movies:/data/movies"
+      - "/media/media-drive1/mp3:/data/music"
+      - "/media/media-drive1/Series:/data/tvshows"
+      - "/media/media-drive1/jellyfin/config:/config"
+  portainer:
+    container_name: "portainer"
+    entrypoint:
+      - "/portainer"
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    hostname: "1c196a2444e1"
+    image: "portainer/portainer-ce"
+    ipc: "private"
+    labels:
+      com.docker.desktop.extension.api.version: ">= 0.2.2"
+      com.docker.desktop.extension.icon: "https://portainer-io-assets.sfo2.cdn.digitaloceanspaces.com/logos/portainer.png"
+      com.docker.extension.additional-urls: "[{\"title\":\"Website\",\"url\":\"https://www.portainer.io?utm_campaign=DockerCon&utm_source=DockerDesktop\"\
+        },{\"title\":\"Documentation\",\"url\":\"https://docs.portainer.io\"},{\"\
+        title\":\"Support\",\"url\":\"https://join.slack.com/t/portainer/shared_invite/zt-txh3ljab-52QHTyjCqbe5RibC2lcjKA\"\
+        }]"
+      com.docker.extension.detailed-description: "<p data-renderer-start-pos=\"226\"\
+        >Portainer&rsquo;s Docker Desktop extension gives you access to all of Portainer&rsquo;s\
+        \ rich management functionality within your docker desktop experience.</p><h2\
+        \ data-renderer-start-pos=\"374\">With Portainer you can:</h2><ul><li>See\
+        \ all your running containers</li><li>Easily view all of your container logs</li><li>Console\
+        \ into containers</li><li>Easily deploy your code into containers using a\
+        \ simple form</li><li>Turn your YAML into custom templates for easy reuse</li></ul><h2\
+        \ data-renderer-start-pos=\"660\">About Portainer&nbsp;</h2><p data-renderer-start-pos=\"\
+        680\">Portainer is the worlds&rsquo; most popular universal container management\
+        \ platform with more than 650,000 active monthly users. Portainer can be used\
+        \ to manage Docker Standalone, Kubernetes, Docker Swarm and Nomad environments\
+        \ through a single common interface. It includes a simple GitOps automation\
+        \ engine and a Kube API.&nbsp;</p><p data-renderer-start-pos=\"1006\">Portainer\
+        \ Business Edition is our fully supported commercial grade product for business-wide\
+        \ use. It includes all the functionality that businesses need to manage containers\
+        \ at scale. Visit <a class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/\"\
+        \ title=\"http://Portainer.io\" data-renderer-mark=\"true\">Portainer.io</a>\
+        \ to learn more about Portainer Business and <a class=\"sc-jKJlTe dPfAtb\"\
+        \ href=\"http://portainer.io/take5?utm_campaign=DockerCon&amp;utm_source=Docker%20Desktop\"\
+        \ title=\"http://portainer.io/take5?utm_campaign=DockerCon&amp;utm_source=Docker%20Desktop\"\
+        \ data-renderer-mark=\"true\">get 5 free nodes.</a></p>"
+      com.docker.extension.publisher-url: "https://www.portainer.io"
+      com.docker.extension.screenshots: "[{\"alt\": \"screenshot one\", \"url\": \"\
+        https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-1.png\"\
+        },{\"alt\": \"screenshot two\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-2.png\"\
+        },{\"alt\": \"screenshot three\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-3.png\"\
+        },{\"alt\": \"screenshot four\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-4.png\"\
+        },{\"alt\": \"screenshot five\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-5.png\"\
+        },{\"alt\": \"screenshot six\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-6.png\"\
+        },{\"alt\": \"screenshot seven\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-7.png\"\
+        },{\"alt\": \"screenshot eight\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-8.png\"\
+        },{\"alt\": \"screenshot nine\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-9.png\"\
+        }]"
+      io.portainer.server: "true"
+      org.opencontainers.image.description: "Docker container management made simple,\
+        \ with the world’s most popular GUI-based container management platform."
+      org.opencontainers.image.title: "Portainer"
+      org.opencontainers.image.vendor: "Portainer.io"
+    logging:
+      driver: "json-file"
+      options: {}
+    mac_address: "02:42:ac:11:00:02"
+    network_mode: "bridge"
+    ports:
+      - "8000:8000/tcp"
+      - "9000:9000/tcp"
+    restart: "unless-stopped"
+    volumes:
+      - "portainer_data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    working_dir: "/"
+  qbittorrent:
+    container_name: "qbittorrent"
+    entrypoint:
+      - "/init"
+    environment:
+      - "WEBUI_PORT=8083"
+      - "PUID=1001"
+      - "PGID=100"
+      - "TZ=Europe/London"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "PS1=$(whoami)@$(hostname):$(pwd)\\$ "
+      - "HOME=/config"
+      - "TERM=xterm"
+      - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+      - "S6_VERBOSITY=1"
+      - "S6_STAGE2_HOOK=/docker-mods"
+      - "XDG_CONFIG_HOME=/config"
+      - "XDG_DATA_HOME=/config"
+    hostname: "2e19a4a5afa4"
+    image: "lscr.io/linuxserver/qbittorrent:latest"
+    ipc: "private"
+    labels:
+      build_version: "Linuxserver.io version:- 4.5.1-r1-ls246 Build-date:- 2023-02-20T04:48:46+01:00"
+      com.docker.compose.config-hash: "1b49a80f5aa79e7d429cb220d0cf80ed1d13ecbedf71b6d95e74a2c81ba76f78"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:ddd8bd3b43ebb59b06f02a3f6d118766d279f499e2c7fcaeb333e80977c18641"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "qbittorrent"
+      com.docker.compose.project.config_files: "/data/compose/20/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/20"
+      com.docker.compose.service: "qbittorrent"
+      com.docker.compose.version: "2.13.0"
+      maintainer: "thespad"
+      org.opencontainers.image.authors: "linuxserver.io"
+      org.opencontainers.image.created: "2023-02-20T04:48:46+01:00"
+      org.opencontainers.image.description: "The [Qbittorrent](https://www.qbittorrent.org/)\
+        \ project aims to provide an open-source software alternative to µTorrent.\
+        \ qBittorrent is based on the Qt toolkit and libtorrent-rasterbar library."
+      org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-qbittorrent"
+      org.opencontainers.image.licenses: "GPL-3.0-only"
+      org.opencontainers.image.ref.name: "81396119667a9fa57ea91383408942b02753f111"
+      org.opencontainers.image.revision: "81396119667a9fa57ea91383408942b02753f111"
+      org.opencontainers.image.source: "https://github.com/linuxserver/docker-qbittorrent"
+      org.opencontainers.image.title: "Qbittorrent"
+      org.opencontainers.image.url: "https://github.com/linuxserver/docker-qbittorrent/packages"
+      org.opencontainers.image.vendor: "linuxserver.io"
+      org.opencontainers.image.version: "4.5.1-r1-ls246"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "qbittorrent_default"
+    ports:
+      - "6881:6881/tcp"
+      - "6881:6881/udp"
+      - "0.0.0.0:8083:8083/tcp"
+    restart: "unless-stopped"
+    volumes:
+      - "/path/to/downloads:/downloads"
+      - "/path/to/appdata/config:/config"
+    working_dir: "/"
+  sickchill:
+    container_name: "sickchill"
+    entrypoint:
+      - "/init"
+    environment:
+      - "PUID=1001"
+      - "PGID=100"
+      - "TZ=Europe/London"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "PS1=$(whoami)@$(hostname):$(pwd)\\$ "
+      - "HOME=/config"
+      - "TERM=xterm"
+      - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+      - "S6_VERBOSITY=1"
+      - "S6_STAGE2_HOOK=/docker-mods"
+      - "PYTHONIOENCODING=UTF-8"
+    hostname: "d5834b310dbe"
+    image: "lscr.io/linuxserver/sickchill:2023.1.2-ls121"
+    ipc: "private"
+    labels:
+      build_version: "Linuxserver.io version:- 2023.1.2-ls121 Build-date:- 2023-02-16T06:34:30+01:00"
+      com.docker.compose.config-hash: "e877c47710af0ab16b2989ea56dbd131d6add93c643b8932cd785c2e7333d9b2"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:a387d34a7e16c124dd7cf6dc357d727ed4ab06f02d05dca005aae66240fe2ae4"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "sickchill"
+      com.docker.compose.project.config_files: "/data/compose/13/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/13"
+      com.docker.compose.service: "sickchill"
+      com.docker.compose.version: "2.13.0"
+      maintainer: "homerr"
+      org.opencontainers.image.authors: "linuxserver.io"
+      org.opencontainers.image.created: "2023-02-16T06:34:30+01:00"
+      org.opencontainers.image.description: "[Sickchill](https://github.com/SickChill/SickChill)\
+        \ is an Automatic Video Library Manager for TV Shows. It watches for new episodes\
+        \ of your favorite shows, and when they are posted it does its magic.   "
+      org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-sickchill"
+      org.opencontainers.image.licenses: "GPL-3.0-only"
+      org.opencontainers.image.ref.name: "4230b47735a0083391ed712ba88d70122fa48348"
+      org.opencontainers.image.revision: "4230b47735a0083391ed712ba88d70122fa48348"
+      org.opencontainers.image.source: "https://github.com/linuxserver/docker-sickchill"
+      org.opencontainers.image.title: "Sickchill"
+      org.opencontainers.image.url: "https://github.com/linuxserver/docker-sickchill/packages"
+      org.opencontainers.image.vendor: "linuxserver.io"
+      org.opencontainers.image.version: "2023.1.2-ls121"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "sickchill_default"
+    ports:
+      - "8081:8081/tcp"
+    restart: "unless-stopped"
+    volumes:
+      - "/media/media-drive1/Torrents:/downloads"
+      - "/media/media-drive1/Series:/Series"
+      - "/media/media-drive1/sickchill/config:/config"
+    working_dir: "/"
+networks:
+  duckdns_default:
+    external: true
+    name: "duckdns_default"
+  graphana-influxdb_default:
+    external: true
+    name: "graphana-influxdb_default"
+  jellyfin_default:
+    external: true
+    name: "jellyfin_default"
+  qbittorrent_default:
+    external: true
+    name: "qbittorrent_default"
+  sickchill_default:
+    external: true
+    name: "sickchill_default"
+volumes:
+  4cd54adcf6a90bf65932cd9e7d4d93fbfe1f1b911eb7316f71c6225a480aca50:
+    external: true
+  a85ad03e69b84408b107e4e0e4069e01c1176c9a36147a0ceb72dc0c4c3a603b:
+    external: true
+  portainer_data:
+    external: true
