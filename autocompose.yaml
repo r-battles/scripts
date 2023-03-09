@@ -1,81 +1,62 @@
 version: "3.6"
 services:
   duckdns:
-    cap_drop:
-      - "AUDIT_CONTROL"
-      - "BLOCK_SUSPEND"
-      - "DAC_READ_SEARCH"
-      - "IPC_LOCK"
-      - "IPC_OWNER"
-      - "LEASE"
-      - "LINUX_IMMUTABLE"
-      - "MAC_ADMIN"
-      - "MAC_OVERRIDE"
-      - "NET_ADMIN"
-      - "NET_BROADCAST"
-      - "SYSLOG"
-      - "SYS_ADMIN"
-      - "SYS_BOOT"
-      - "SYS_MODULE"
-      - "SYS_NICE"
-      - "SYS_PACCT"
-      - "SYS_PTRACE"
-      - "SYS_RAWIO"
-      - "SYS_RESOURCE"
-      - "SYS_TIME"
-      - "SYS_TTY_CONFIG"
-      - "WAKE_ALARM"
     container_name: "duckdns"
     entrypoint:
       - "/init"
     environment:
-      - "TZ=Europe/London"
-      - "SUBDOMAINS=russo"
-      - "TOKEN=29a6f0ff-4b1c-436e-bb52-21503f03172c"
       - "LOG_FILE=true"
+      - "PUID=1001"
+      - "PGID=101"
+      - "TZ=Europe/London"
+      - "SUBDOMAINS=russo,torrents-russo,sickchill-russo,stream-russo"
+      - "TOKEN=29a6f0ff-4b1c-436e-bb52-21503f03172c"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-      - "PS1=$(whoami)@$(hostname):$(pwd)\\$"
+      - "PS1=$(whoami)@$(hostname):$(pwd)\\$ "
       - "HOME=/root"
       - "TERM=xterm"
-      - "S6_BEHAVIOUR_IF_STAGE2_FAILS=2"
       - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
-    hostname: "c7a5c9454782"
-    image: "lscr.io/linuxserver/duckdns:latest"
+      - "S6_VERBOSITY=1"
+      - "S6_STAGE2_HOOK=/docker-mods"
+      - "LSIO_FIRST_PARTY=true"
+    hostname: "c880338ee2d3"
+    image: "lscr.io/linuxserver/duckdns:ab5e2d0e-ls122"
     ipc: "private"
     labels:
-      build_version: "Linuxserver.io version:- d087f467-ls92 Build-date:- 2022-03-09T16:56:11+01:00"
-      com.docker.compose.config-hash: "5d77fca0fa2d95cc1f1bac7565e11a1d0905c9256a3208e594b3d304e7d955cb"
+      build_version: "Linuxserver.io version:- ab5e2d0e-ls122 Build-date:- 2023-03-04T04:32:20+01:00"
+      com.docker.compose.config-hash: "81f539224bbaf1f3a7a10c68d42cb216fce4866dfc24593d80fd59dafbd9c07e"
       com.docker.compose.container-number: "1"
       com.docker.compose.depends_on: ""
-      com.docker.compose.image: "sha256:b11581d84b16a030d73254f1f44e608b8eb2588b60fe9eb6e4f4bf5afaf1221e"
+      com.docker.compose.image: "sha256:570ba6a669c90bc506b108c9e902fd9fa7db2ead71e9f22eb5db8aa914425287"
       com.docker.compose.oneoff: "False"
       com.docker.compose.project: "duckdns"
       com.docker.compose.project.config_files: "/data/compose/2/docker-compose.yml"
       com.docker.compose.project.working_dir: "/data/compose/2"
       com.docker.compose.service: "duckdns"
-      com.docker.compose.version: "2.5.1"
+      com.docker.compose.version: "2.13.0"
       maintainer: "aptalca"
       org.opencontainers.image.authors: "linuxserver.io"
-      org.opencontainers.image.created: "2022-03-09T16:56:11+01:00"
+      org.opencontainers.image.created: "2023-03-04T04:32:20+01:00"
       org.opencontainers.image.description: "[Duckdns](https://duckdns.org/) is a\
         \ free service which will point a DNS (sub domains of duckdns.org) to an IP\
         \ of your choice. The service is completely free, and doesn't require reactivation\
         \ or forum posts to maintain its existence."
       org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-duckdns"
       org.opencontainers.image.licenses: "GPL-3.0-only"
-      org.opencontainers.image.ref.name: "ffb82cdaa3929af789043e10d920ed827438c2f6"
-      org.opencontainers.image.revision: "ffb82cdaa3929af789043e10d920ed827438c2f6"
+      org.opencontainers.image.ref.name: "f5a18d6efd68689b873050af8fb290764de2b7af"
+      org.opencontainers.image.revision: "f5a18d6efd68689b873050af8fb290764de2b7af"
       org.opencontainers.image.source: "https://github.com/linuxserver/docker-duckdns"
       org.opencontainers.image.title: "Duckdns"
       org.opencontainers.image.url: "https://github.com/linuxserver/docker-duckdns/packages"
       org.opencontainers.image.vendor: "linuxserver.io"
-      org.opencontainers.image.version: "d087f467-ls92"
+      org.opencontainers.image.version: "ab5e2d0e-ls122"
     logging:
       driver: "json-file"
       options: {}
     networks:
       - "duckdns_default"
     restart: "unless-stopped"
+    working_dir: "/"
   grafana:
     container_name: "grafana"
     entrypoint:
@@ -114,6 +95,62 @@ services:
     volumes:
       - "/media/media-drive1/grafana/data:/var/lib/grafana"
     working_dir: "/usr/share/grafana"
+  homeassistant:
+    container_name: "homeassistant"
+    entrypoint:
+      - "/init"
+    environment:
+      - "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "LANG=C.UTF-8"
+      - "S6_BEHAVIOUR_IF_STAGE2_FAILS=2"
+      - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+      - "S6_CMD_WAIT_FOR_SERVICES=1"
+      - "S6_SERVICES_READYTIME=50"
+      - "WHEELS_LINKS=https://wheels.home-assistant.io/musllinux/"
+      - "S6_SERVICES_GRACETIME=220000"
+    hostname: "htpc"
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    ipc: "private"
+    labels:
+      com.docker.compose.config-hash: "94e78192c4fa74c41594ef3ad64d76d12732c82dda58f3af2af558acccbfba82"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:dd292455cea7c13003bc9bac56a2993756b511edff002a8d7fe27edd5c448893"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "homeassistant"
+      com.docker.compose.project.config_files: "/data/compose/24/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/24"
+      com.docker.compose.service: "homeassistant"
+      com.docker.compose.version: "2.13.0"
+      io.hass.arch: "amd64"
+      io.hass.base.arch: "amd64"
+      io.hass.base.image: "homeassistant/amd64-base:3.16"
+      io.hass.base.name: "python"
+      io.hass.base.version: "2022.11.0"
+      io.hass.type: "core"
+      io.hass.version: "2023.2.5"
+      org.opencontainers.image.authors: "The Home Assistant Authors"
+      org.opencontainers.image.created: "2023-02-15 20:34:07+00:00"
+      org.opencontainers.image.description: "Open-source home automation platform\
+        \ running on Python 3"
+      org.opencontainers.image.documentation: "https://www.home-assistant.io/docs/"
+      org.opencontainers.image.licenses: "Apache License 2.0"
+      org.opencontainers.image.source: "https://github.com/home-assistant/core"
+      org.opencontainers.image.title: "Home Assistant"
+      org.opencontainers.image.url: "https://www.home-assistant.io/"
+      org.opencontainers.image.version: "2023.2.5"
+    logging:
+      driver: "json-file"
+      options: {}
+    network_mode: "host"
+    privileged: true
+    restart: "unless-stopped"
+    security_opt:
+      - "label=disable"
+    volumes:
+      - "/media/media-drive1/home-assistant-config:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+    working_dir: "/config"
   influxdb:
     command:
       - "influxd"
@@ -158,67 +195,45 @@ services:
       - "8086:8086/tcp"
     restart: "always"
     volumes:
-      - "a85ad03e69b84408b107e4e0e4069e01c1176c9a36147a0ceb72dc0c4c3a603b:/var/lib/influxdb2"
       - "4cd54adcf6a90bf65932cd9e7d4d93fbfe1f1b911eb7316f71c6225a480aca50:/etc/influxdb2"
       - "/media/media-drive1/influxdb:/root/influxdb/data"
-  jellyfin:
-    cap_drop:
-      - "AUDIT_CONTROL"
-      - "BLOCK_SUSPEND"
-      - "DAC_READ_SEARCH"
-      - "IPC_LOCK"
-      - "IPC_OWNER"
-      - "LEASE"
-      - "LINUX_IMMUTABLE"
-      - "MAC_ADMIN"
-      - "MAC_OVERRIDE"
-      - "NET_ADMIN"
-      - "NET_BROADCAST"
-      - "SYSLOG"
-      - "SYS_ADMIN"
-      - "SYS_BOOT"
-      - "SYS_MODULE"
-      - "SYS_NICE"
-      - "SYS_PACCT"
-      - "SYS_PTRACE"
-      - "SYS_RAWIO"
-      - "SYS_RESOURCE"
-      - "SYS_TIME"
-      - "SYS_TTY_CONFIG"
-      - "WAKE_ALARM"
-    container_name: "jellyfin"
+      - "a85ad03e69b84408b107e4e0e4069e01c1176c9a36147a0ceb72dc0c4c3a603b:/var/lib/influxdb2"
+  jellyfin-container:
+    container_name: "jellyfin-container"
     entrypoint:
       - "/init"
     environment:
-      - "PGID=101"
       - "TZ=Europe/London"
       - "device=/dev/dri:/dev/dri"
       - "PUID=1001"
+      - "PGID=101"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
       - "HOME=/root"
       - "LANGUAGE=en_US.UTF-8"
       - "LANG=en_US.UTF-8"
       - "TERM=xterm"
       - "S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0"
+      - "S6_VERBOSITY=1"
+      - "S6_STAGE2_HOOK=/docker-mods"
       - "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility"
-    hostname: "17b69bd04702"
-    image: "lscr.io/linuxserver/jellyfin:latest"
+    hostname: "4392c6dc32cd"
+    image: "lscr.io/linuxserver/jellyfin:10.8.9-1-ls200"
     ipc: "private"
     labels:
-      build_version: "Linuxserver.io version:- 10.8.4-1-ls177 Build-date:- 2022-08-17T23:06:23-05:00"
-      com.docker.compose.config-hash: "f529a557dd17e37b3875bddfdad0f61c916755f3fe44ff7f0ac254a6b1597a55"
+      build_version: "Linuxserver.io version:- 10.8.9-1-ls200 Build-date:- 2023-02-16T03:53:46+01:00"
+      com.docker.compose.config-hash: "446b41fc27b81a583fa10fa273b75dec961dacb72c1d8c9df34faf0a7711e06f"
       com.docker.compose.container-number: "1"
       com.docker.compose.depends_on: ""
-      com.docker.compose.image: "sha256:aa09b1b724a42e5edf1f45e2fdf8fe1d017fb1b6f36600af207b662426032e3f"
+      com.docker.compose.image: "sha256:b23061552a57750f1469853867fcb7aada034be8f1c35de3514e02038fdf0eea"
       com.docker.compose.oneoff: "False"
       com.docker.compose.project: "jellyfin"
       com.docker.compose.project.config_files: "/data/compose/5/docker-compose.yml"
       com.docker.compose.project.working_dir: "/data/compose/5"
       com.docker.compose.service: "jellyfin"
-      com.docker.compose.version: "2.5.1"
+      com.docker.compose.version: "2.13.0"
       maintainer: "thelamer"
       org.opencontainers.image.authors: "linuxserver.io"
-      org.opencontainers.image.created: "2022-08-17T23:06:23-05:00"
+      org.opencontainers.image.created: "2023-02-16T03:53:46+01:00"
       org.opencontainers.image.description: "[Jellyfin](https://jellyfin.github.io/)\
         \ is a Free Software Media System that puts you in control of managing and\
         \ streaming your media. It is an alternative to the proprietary Emby and Plex,\
@@ -230,13 +245,13 @@ services:
         \ it."
       org.opencontainers.image.documentation: "https://docs.linuxserver.io/images/docker-jellyfin"
       org.opencontainers.image.licenses: "GPL-3.0-only"
-      org.opencontainers.image.ref.name: "bc6ccdba307b349c36d25be98aba5fda10aadc89"
-      org.opencontainers.image.revision: "bc6ccdba307b349c36d25be98aba5fda10aadc89"
+      org.opencontainers.image.ref.name: "27592de9040d4c5157f800a0e6f6261d6feb63be"
+      org.opencontainers.image.revision: "27592de9040d4c5157f800a0e6f6261d6feb63be"
       org.opencontainers.image.source: "https://github.com/linuxserver/docker-jellyfin"
       org.opencontainers.image.title: "Jellyfin"
       org.opencontainers.image.url: "https://github.com/linuxserver/docker-jellyfin/packages"
       org.opencontainers.image.vendor: "linuxserver.io"
-      org.opencontainers.image.version: "10.8.4-1-ls177"
+      org.opencontainers.image.version: "10.8.9-1-ls200"
     logging:
       driver: "json-file"
       options: {}
@@ -253,6 +268,61 @@ services:
       - "/media/media-drive1/mp3:/data/music"
       - "/media/media-drive1/Series:/data/tvshows"
       - "/media/media-drive1/jellyfin/config:/config"
+    working_dir: "/"
+  nginx-proxy-manager-app-1:
+    container_name: "nginx-proxy-manager-app-1"
+    entrypoint:
+      - "/init"
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"
+      - "OPENRESTY_VERSION=1.19.9.1"
+      - "CROWDSEC_OPENRESTY_BOUNCER_VERSION=0.1.7"
+      - "CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
+      - "SUPPRESS_NO_CONFIG_WARNING=1"
+      - "S6_FIX_ATTRS_HIDDEN=1"
+      - "S6_BEHAVIOUR_IF_STAGE2_FAILS=1"
+      - "NODE_ENV=production"
+      - "NPM_BUILD_VERSION=2.9.19"
+      - "NPM_BUILD_COMMIT=5920b0c"
+      - "NPM_BUILD_DATE=2022-11-08 04:56:39 UTC"
+    hostname: "51cfa10a33d3"
+    image: "jc21/nginx-proxy-manager:latest"
+    ipc: "private"
+    labels:
+      com.docker.compose.config-hash: "da14d9c56b5087bf46f499d1dc5abfdafa54451dd7c97b0db2d4347fcb13823a"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.depends_on: ""
+      com.docker.compose.image: "sha256:60a6ddeeaa79b8f0cda43b3ebcb789e453caff8a919070e930746dbb2cd24878"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "nginx-proxy-manager"
+      com.docker.compose.project.config_files: "/data/compose/33/docker-compose.yml"
+      com.docker.compose.project.working_dir: "/data/compose/33"
+      com.docker.compose.service: "app"
+      com.docker.compose.version: "2.13.0"
+      maintainer: "Jamie Curnow <jc@jc21.com>"
+      org.label-schema.cmd: "docker run --rm -ti jc21/nginx-proxy-manager:latest"
+      org.label-schema.description: "Docker container for managing Nginx proxy hosts\
+        \ with a simple, powerful interface "
+      org.label-schema.license: "MIT"
+      org.label-schema.name: "nginx-proxy-manager"
+      org.label-schema.schema-version: "1.0"
+      org.label-schema.url: "https://github.com/jc21/nginx-proxy-manager"
+      org.label-schema.vcs-url: "https://github.com/jc21/nginx-proxy-manager.git"
+    logging:
+      driver: "json-file"
+      options: {}
+    networks:
+      - "jellyfin_default"
+    ports:
+      - "4443:443/tcp"
+      - "8080:80/tcp"
+      - "81:81/tcp"
+    restart: "unless-stopped"
+    volumes:
+      - "/media/media-drive1/nginx/config:/data"
+      - "/media/media-drive1/nginx/letsencrypt:/etc/letsencrypt"
+    working_dir: "/app"
   portainer:
     container_name: "portainer"
     entrypoint:
@@ -317,18 +387,18 @@ services:
       - "9000:9000/tcp"
     restart: "unless-stopped"
     volumes:
-      - "portainer_data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "portainer_data:/data"
     working_dir: "/"
-  qbittorrent:
-    container_name: "qbittorrent"
+  qbittorrent-container:
+    container_name: "qbittorrent-container"
     entrypoint:
       - "/init"
     environment:
+      - "TZ=Europe/London"
       - "WEBUI_PORT=8083"
       - "PUID=1001"
       - "PGID=100"
-      - "TZ=Europe/London"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
       - "PS1=$(whoami)@$(hostname):$(pwd)\\$ "
       - "HOME=/config"
@@ -338,12 +408,12 @@ services:
       - "S6_STAGE2_HOOK=/docker-mods"
       - "XDG_CONFIG_HOME=/config"
       - "XDG_DATA_HOME=/config"
-    hostname: "2e19a4a5afa4"
+    hostname: "ed2b3fc894dc"
     image: "lscr.io/linuxserver/qbittorrent:latest"
     ipc: "private"
     labels:
       build_version: "Linuxserver.io version:- 4.5.1-r1-ls246 Build-date:- 2023-02-20T04:48:46+01:00"
-      com.docker.compose.config-hash: "1b49a80f5aa79e7d429cb220d0cf80ed1d13ecbedf71b6d95e74a2c81ba76f78"
+      com.docker.compose.config-hash: "3bfb6958c976f5a1f9278885f5acbb76473d69e9852b8ca325d857fd1844c936"
       com.docker.compose.container-number: "1"
       com.docker.compose.depends_on: ""
       com.docker.compose.image: "sha256:ddd8bd3b43ebb59b06f02a3f6d118766d279f499e2c7fcaeb333e80977c18641"
@@ -372,24 +442,25 @@ services:
       driver: "json-file"
       options: {}
     networks:
-      - "qbittorrent_default"
+      - "jellyfin_default"
     ports:
       - "6881:6881/tcp"
       - "6881:6881/udp"
       - "0.0.0.0:8083:8083/tcp"
     restart: "unless-stopped"
     volumes:
-      - "/path/to/downloads:/downloads"
-      - "/path/to/appdata/config:/config"
+      - "/media/media-drive1/qbittorrent/config:/config"
+      - "/media/media-drive1/Torrents:/downloads"
+      - "/media/media-drive1/torrents-incomplete:/incomplete"
     working_dir: "/"
-  sickchill:
-    container_name: "sickchill"
+  sickchill-container:
+    container_name: "sickchill-container"
     entrypoint:
       - "/init"
     environment:
-      - "PUID=1001"
       - "PGID=100"
       - "TZ=Europe/London"
+      - "PUID=1001"
       - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
       - "PS1=$(whoami)@$(hostname):$(pwd)\\$ "
       - "HOME=/config"
@@ -398,12 +469,12 @@ services:
       - "S6_VERBOSITY=1"
       - "S6_STAGE2_HOOK=/docker-mods"
       - "PYTHONIOENCODING=UTF-8"
-    hostname: "d5834b310dbe"
+    hostname: "0777dcd9eaa0"
     image: "lscr.io/linuxserver/sickchill:2023.1.2-ls121"
     ipc: "private"
     labels:
       build_version: "Linuxserver.io version:- 2023.1.2-ls121 Build-date:- 2023-02-16T06:34:30+01:00"
-      com.docker.compose.config-hash: "e877c47710af0ab16b2989ea56dbd131d6add93c643b8932cd785c2e7333d9b2"
+      com.docker.compose.config-hash: "ede493aed860a91d3084489dc97a1b213f7ad2543184471ff9fb59be579ea345"
       com.docker.compose.container-number: "1"
       com.docker.compose.depends_on: ""
       com.docker.compose.image: "sha256:a387d34a7e16c124dd7cf6dc357d727ed4ab06f02d05dca005aae66240fe2ae4"
@@ -432,7 +503,7 @@ services:
       driver: "json-file"
       options: {}
     networks:
-      - "sickchill_default"
+      - "jellyfin_default"
     ports:
       - "8081:8081/tcp"
     restart: "unless-stopped"
@@ -451,12 +522,6 @@ networks:
   jellyfin_default:
     external: true
     name: "jellyfin_default"
-  qbittorrent_default:
-    external: true
-    name: "qbittorrent_default"
-  sickchill_default:
-    external: true
-    name: "sickchill_default"
 volumes:
   4cd54adcf6a90bf65932cd9e7d4d93fbfe1f1b911eb7316f71c6225a480aca50:
     external: true
