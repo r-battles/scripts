@@ -1,0 +1,19 @@
+#---------------------------------------------------------------------#
+#     Homarr - A simple, yet powerful dashboard for your server.      #
+#---------------------------------------------------------------------#
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - /media/media-drive1/containers/homarr/configs:/app/data/configs
+      - /media/media-drive1/containers/homarr/icons:/app/public/icons
+      - /media/media-drive1/containers/homarr/data:/data
+    ports:
+      - '7575:7575'
+networks:
+  default:
+    external: true
+    name: "jellyfin_default"
