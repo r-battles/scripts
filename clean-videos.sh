@@ -1,4 +1,6 @@
 #!/bin/sh
-sudo find /media/media-drive/ftp/write/camc1/* -type f -mtime +7 -execdir rm -rf -- '{}' \;
-sudo find /media/media-drive/ftp/write/camc1-branca/* -type f -mtime +7 -execdir rm -rf  -- '{}' \;
-sudo find /media/media-drive/ftp/write/camsotao/* -type f -mtime +7 -execdir rm -rf -- '{}' \;
+find /media/media-drive1/containers/ftp/camc1/* -type f -mtime +14 -execdir rm -rf -- '{}' \;
+find /media/media-drive1/containers/ftp/camc1-branca/* -type f -mtime +14 -execdir rm -rf  -- '{}' \;
+find /media/media-drive1/containers/ftp/camsotao/* -type f -mtime +14 -execdir rm -rf -- '{}' \;
+find /media/media-drive1/containers/ftp/cam-traseira/* -type f -mtime +14 -execdir rm -rf -- '{}' \;
+find /media/media-drive1/containers/ftp/camentrada/* -type f -mtime +14 -execdir rm -rf -- '{}' \;
