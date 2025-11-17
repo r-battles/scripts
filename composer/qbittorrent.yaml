@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  qbittorrent:
+    image: "lscr.io/linuxserver/qbittorrent:5.0.0"
+    container_name: "qbittorrent-container"
+    environment:
+    - "PUID=1000"
+    - "PGID=100"
+    - "TZ=Europe/London"
+    - "WEBUI_PORT=8083"
+    - "QBT_WEBUI_PATH=/torrents"
+    volumes:
+    - "/media/media-drive1/containers/qbittorrent/config/:/config"
+    - "/media/media-drive1/Torrents/:/downloads"
+    - "/media/media-drive1/torrents-incomplete:/incomplete"
+    - "/media/media-drive1/Movies:/movies"
+    ports:
+     - "0.0.0.0:8083:8083"
+     - "6881:6881"
+     - "6881:6881/udp"
+    restart: "unless-stopped"
+    #network_mode: host
+networks:
+  default:
+    external: true
+    name: "jellyfin_default"
