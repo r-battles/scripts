@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  stirling-pdf:
+    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    ports:
+      - '8085:8080'
+    volumes:
+      - /media/media-drive1/containers/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - /media/media-drive1/containers/StirlingPDF/extraConfigs:/configs
+      - /media/media-drive1/containers/StirlingPDF/customFiles:/customFiles/
+      - /media/media-drive1/containers/StirlingPDF/logs:/logs/
+      - /media/media-drive1/containers/StirlingPDF/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - LANGS=pt_PT
+    restart: "unless-stopped"
