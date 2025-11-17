@@ -1,0 +1,37 @@
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    ports:
+      - "9001:9001" # SIA PROTOCOL
+    volumes:
+      - /media/media-drive1/containers/home-assistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+  nodered:
+    container_name: nodered
+    image: nodered/node-red
+    ports:
+      - "1880:1880"
+    volumes:
+      - "/media/media-drive1/containers/node-red:/data"
+    depends_on:
+      - homeassistant
+    environment:
+      TZ: "Europe/Lisbon"
+    restart: unless-stopped
+ # hass-configurator:
+  #  image: "causticlab/hass-configurator-docker"
+   # container_name: hass-configurator
+   # restart: unless-stopped
+   # ports:
+   #   - "3218:3218/tcp"
+    #depends_on:
+    #  - homeassistant
+    #volumes:
+    #  - "/media/media-drive1/home-assistant:/config"
+    #  - "/media/media-drive1/hass-config:/hass-config"
+    #user: "${PUID}:${PGID}"
