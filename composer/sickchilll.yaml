@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+  sickchill:
+    image: "lscr.io/linuxserver/sickchill:2024.3.1"
+    container_name: "sickchill-container"
+    environment:
+    - "PUID=1000"
+    - "PGID=100"
+    - "TZ=Europe/London"
+    volumes:
+    - "/media/media-drive1/containers/sickchill/config:/config"
+    - "/media/media-drive1/Torrents:/media/media-drive1/Torrents"
+    - "/media/media-drive1/Series:/media/media-drive1/Series"
+    ports:
+    - "8081:8081"
+    restart: "unless-stopped"
+networks:
+  default:
+    external: true
+    name: "jellyfin_default"
