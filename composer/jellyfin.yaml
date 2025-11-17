@@ -1,0 +1,24 @@
+---
+version: "2.1"
+services:
+  jellyfin:
+    image: "lscr.io/linuxserver/jellyfin:10.10.3"
+    container_name: "jellyfin-container"
+    environment:
+    - "PUID=1000"
+    - "PGID=100"
+    - "TZ=Europe/London"
+    #- "device=/dev/dri:/dev/dri"
+    volumes:
+    - "/media/media-drive1/containers/jellyfin/config:/config"
+    - "/media/media-drive1/Series:/data/tvshows"
+    - "/media/media-drive1/Movies:/data/movies"
+    - "/media/media-drive1/mp3:/data/music"
+    ports:
+    - "8096:8096"
+    - "8920:8920"
+    - "7359:7359/udp"
+    # - "1900:1900/udp"
+    devices:
+     - /dev/dri:/dev/dri
+    restart: "unless-stopped"
