@@ -1,0 +1,19 @@
+services:
+  ftp-server:
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    container_name: ftp-server
+    environment:
+      - FTP_PASS=PASSWORD
+      - FTP_USER=userftp
+    image: garethflowers/ftp-server
+    ports:
+      - '20-21:20-21/tcp'
+     # - '40000-40009:40000-40009/tcp'
+    volumes:
+      - '/media/media-drive1/containers/ftp:/home/userftp'
+    restart: unless-stopped
+  
