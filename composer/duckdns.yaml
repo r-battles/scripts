@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+  duckdns:
+    image: "lscr.io/linuxserver/duckdns:version-cd710f3e"
+    container_name: "duckdns"
+    environment:
+    - "PUID=1001"
+    - "PGID=101"
+    - "TZ=Europe/London"
+    - "SUBDOMAINS=russo,torrents-russo,sickchill-russo,stream-russo,hass-russo"
+    - "TOKEN=CHANGE_TOKEN"
+    - "LOG_FILE=true"
+    restart: "unless-stopped"
