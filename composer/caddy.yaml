@@ -1,0 +1,19 @@
+services:
+  caddy:
+      image: caddy:2.7.6-alpine
+      #image: caddy:2.8.4
+      #image: ghcr.io/authcrunch/authcrunch:v1.0.14
+      #image: ghcr.io/authcrunch/authcrunch:latest
+      ports:
+        - 8080:80
+        - 4443:443
+      volumes:
+        - /media/media-drive1/containers/caddy/data:/data
+        - /media/media-drive1/containers/caddy/Caddyfile:/etc/caddy/Caddyfile
+      restart: unless-stopped
+      #network_mode: host
+    
+networks:    
+   default:
+    external: true
+    name: jellyfin_default
