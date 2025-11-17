@@ -1,0 +1,15 @@
+ services:
+   universalmediaserver:
+
+    image: universalmediaserver/ums
+    container_name: UMS
+    network_mode: host
+    environment:
+      - UMS_PROFILE=/profile
+    volumes:
+      - /media/media-drive1/containers/universalmediaserver:/profile
+      - /media/media-drive1/cenas/:/cenas:ro
+      - /media/media-drive1/cenas organizadas/:/cenas-organizadas:ro
+      - /media/media-drive1/cenas desorganizadas:/cenas-desorganizadas:ro
+ 
+    restart: 'unless-stopped'
